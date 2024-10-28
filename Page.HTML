@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AES-GCM 256</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script src="libs/popper.min.js"></script>
+    <script src="libs/bootstrap.min.js"></script>
+
+    <meta
+      name="description"
+      content="Client-side AES-GCM-256 encryption tool"
+    />
+    <meta
+      name="keywords"
+      content="AES-GCM-256, encryption, decryption, AES-GCM-256 online, AES-GCM-256 encryption, client-side, PBKDF2, key derivation"
+    />
+    <meta name="author" content="Kassem Bagher" />
+    <meta
+      property="og:title"
+      content="AES-GCM 256 Encryption and Decryption Web App"
+    />
+    <meta
+      property="og:description"
+      content="A simple client-side web app for encrypting and decrypting text using AES-GCM-256 algorithm and PBKDF2 for key derivation."
+    />
+    <meta property="og:url" content="https://kbagher.github.io/aes-gcm/" />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="my-4">AES-GCM 256</h1>
+      <div class="mb-3">
+        <label for="key-input" class="form-label">Key</label>
+        <input
+          type="password"
+          autocomplete="off"
+          class="form-control"
+          id="key-input"
+          placeholder="Master key with any length"
+        />
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="iv-input" class="form-label"
+            >Salt <span id="salt-counter">(0/12)</span></label
+          >
+          <input
+            type="password"
+            autocomplete="off"
+            class="form-control"
+            id="iv-input"
+            placeholder="Exactly 12 characters"
+            maxlength="12"
+          />
+        </div>
+        <div class="col">
+          <label for="iterations-input" class="form-label">Iterations</label>
+          <input
+            type="password"
+            autocomplete="off"
+            class="form-control"
+            id="iterations-input"
+            min="1000"
+            placeholder="Minumum 1,000"
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="text-input" class="form-label">Input</label>
+        <textarea class="form-control" id="text-input"></textarea>
+      </div>
+      <div class="mb-3">
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="format"
+            id="hex-format"
+            value="hex"
+            checked
+          />
+          <label class="form-check-label" for="hex-format">Hex</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="format"
+            id="base64-format"
+            value="base64"
+          />
+          <label class="form-check-label" for="base64-format">Base64</label>
+        </div>
+      </div>
+      <div class="mb-3">
+        <button class="btn btn-primary" onclick="encrypt()">Encrypt</button>
+        <button class="btn btn-secondary" onclick="decrypt()">Decrypt</button>
+      </div>
+      <div class="mb-3">
+        <label for="output" class="form-label">Output</label>
+        <textarea class="form-control" id="output" readonly></textarea>
+      </div>
+      <div class="mb-3">
+        <button class="btn btn-primary" onclick="copyResult()">
+          Copy Result
+        </button>
+      </div>
+    </div>
+
+    <script>
+      async function encrypt() {
+        debugger;
+        const text = document.getElementById("text-input").value;
+        let objectData = {
+          EmpId: 1,
+          FName: "FName",
+          LName: "LName",
+          artist: "Daft Punk",
+          title: "Homework",
+          release_year: 1997,
+          formats: ["CD", "Cassette", "LP"],
+          gold: true,
+          sEmpId: 1,
+          sFName: "FName",
+          sLName: "LName",
+          sartist: "Daft Punk",
+          stitle: "Homework",
+          srelease_year: 1997,
+          sformats: ["CD", "Cassette", "LP"],
+          sgold: true,
+          wEmpId: 1,
+          wFName: "FName",
+          wLName: "LName",
+          wartist: "Daft Punk",
+          wtitle: "Homework",
+          wrelease_year: 1997,
+          wformats: ["CD", "Cassette", "LP"],
+          wgold: true,
+          gender: "Male",
+          language: "English",
+          haircolor: "Brown",
+          shirtcolor: "Blue",
+          trouser: "Jean",
+          shoe: "Snickers",
+          events: ["Singing", "Dancing", "Driving"],
+          car: {
+            brand: "Toyota",
+            model: "2015",
+            color: "Black",
+          },
+          25481: {
+            album: "Implication",
+            artist: "2face Idibia",
+            tracks: ["Spiritual healing", "you Give Love a Bad Name"],
+          },
+          24681: {
+            album: "Beautiful Imperfection",
+            artist: "Asa",
+            tracks: ["Bed of Stone", "Awe"],
+          },
+          24682: {
+            album: "Beautiful Imperfection",
+            artist: "Asa",
+            tracks: ["Bed of Stone", "Awe"],
+            artist: "R-Kelly",
+            tracks: [],
+          },
+          2343682: {
+            album: "Beautiful Imperfection",
+            artist: "Asa",
+            tracks: ["Bed of Stone", "Awe"],
+            artist: "R-Kelly",
+            tracks: [],
+          },
+          23242382: {
+            album: "Beautiful Imperfection",
+            artist: "Asa",
+            tracks: ["Bed of Stone", "Awe"],
+            artist: "R-Kelly",
+            tracks: [],
+          },
+          2548: {
+            artist: "R-Kelly",
+            tracks: [],
+          },
+          5439: {
+            album: "Adekunle",
+          },
+        };
+
+        let data = await encryptData(JSON.stringify(objectData));
+        debugger;
+      }
+      async function encryptData(plainText) {
+        // Static key and nonce (in base64 format)
+        const keyBase64 = "6jah1TjcsKC3XXsCWxUVZtOR4rLoDSkB/nn+WY7/5nk=";
+        const nonceBase64 = "f4jl9iLwWA4Boas0";
+
+        // Decode the base64 key and nonce to Uint8Array
+        const key = Uint8Array.from(atob(keyBase64), (c) => c.charCodeAt(0));
+        const nonce = Uint8Array.from(atob(nonceBase64), (c) =>
+          c.charCodeAt(0)
+        );
+
+        // Import the static key for AES-GCM encryption
+        const cryptoKey = await window.crypto.subtle.importKey(
+          "raw",
+          key,
+          { name: "AES-GCM" },
+          false,
+          ["encrypt"]
+        );
+
+        // Convert plain text to bytes
+        const encoder = new TextEncoder();
+        const data = encoder.encode(plainText);
+
+        // Encrypt data
+        const encrypted = await window.crypto.subtle.encrypt(
+          { name: "AES-GCM", iv: nonce },
+          cryptoKey,
+          data
+        );
+
+        // Convert encrypted data to base64
+        const encryptedArray = new Uint8Array(encrypted);
+        const encryptedBase64 = btoa(String.fromCharCode(...encryptedArray));
+
+        return { encryptedBase64, keyBase64, nonceBase64 };
+      }
+      //   async function encryptData(plainText) {
+      //     debugger;
+      //     // Convert plain text to bytes
+      //     const encoder = new TextEncoder();
+      //     const data = encoder.encode(plainText);
+
+      //     // Generate a random 256-bit key (only once; store securely)
+      //     const key = await window.crypto.subtle.generateKey(
+      //       { name: "AES-GCM", length: 256 },
+      //       true,
+      //       ["encrypt", "decrypt"]
+      //     );
+
+      //     // Generate a random 12-byte nonce for this encryption
+      //     const nonce = window.crypto.getRandomValues(new Uint8Array(12));
+
+      //     // Encrypt data
+      //     const encrypted = await window.crypto.subtle.encrypt(
+      //       {
+      //         name: "AES-GCM",
+      //         iv: nonce,
+      //       },
+      //       key,
+      //       data
+      //     );
+
+      //     // Convert encrypted data to base64 for easy transmission
+      //     const encryptedArray = new Uint8Array(encrypted);
+      //     const encryptedBase64 = btoa(String.fromCharCode(...encryptedArray));
+
+      //     // Export key and nonce for decryption on the C# side
+      //     const exportedKey = await window.crypto.subtle.exportKey("raw", key);
+      //     const keyBase64 = btoa(
+      //       String.fromCharCode(...new Uint8Array(exportedKey))
+      //     );
+      //     const nonceBase64 = btoa(String.fromCharCode(...nonce));
+
+      //     return { encryptedBase64, keyBase64, nonceBase64 };
+      //   }
+    </script>
+  </body>
+</html>
