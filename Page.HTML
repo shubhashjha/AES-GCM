@@ -194,42 +194,44 @@
         debugger;
       }
       async function encryptData(plainText) {
-        // Static key and nonce (in base64 format)
-        const keyBase64 = "6jah1TjcsKC3XXsCWxUVZtOR4rLoDSkB/nn+WY7/5nk=";
-        const nonceBase64 = "f4jl9iLwWA4Boas0";
-
-        // Decode the base64 key and nonce to Uint8Array
-        const key = Uint8Array.from(atob(keyBase64), (c) => c.charCodeAt(0));
-        const nonce = Uint8Array.from(atob(nonceBase64), (c) =>
-          c.charCodeAt(0)
-        );
-
-        // Import the static key for AES-GCM encryption
-        const cryptoKey = await window.crypto.subtle.importKey(
-          "raw",
-          key,
-          { name: "AES-GCM" },
-          false,
-          ["encrypt"]
-        );
-
         // Convert plain text to bytes
         const encoder = new TextEncoder();
         const data = encoder.encode(plainText);
 
+        // Generate a random 256-bit key (only once; store securely)
+        const key = await window.crypto.subtle.generateKey(
+          { name: "AES-GCM", length: 256 },
+          true,
+          ["encrypt", "decrypt"]
+        );
+
+        // Generate a random 12-byte nonce for this encryption
+        const nonce = window.crypto.getRandomValues(new Uint8Array(12));
+
         // Encrypt data
         const encrypted = await window.crypto.subtle.encrypt(
-          { name: "AES-GCM", iv: nonce },
-          cryptoKey,
+          {
+            name: "AES-GCM",
+            iv: nonce,
+          },
+          key,
           data
         );
 
-        // Convert encrypted data to base64
+        // Convert encrypted data to base64 for easy transmission
         const encryptedArray = new Uint8Array(encrypted);
         const encryptedBase64 = btoa(String.fromCharCode(...encryptedArray));
 
+        // Export key and nonce for decryption on the C# side
+        const exportedKey = await window.crypto.subtle.exportKey("raw", key);
+        const keyBase64 = btoa(
+          String.fromCharCode(...new Uint8Array(exportedKey))
+        );
+        const nonceBase64 = btoa(String.fromCharCode(...nonce));
+
         return { encryptedBase64, keyBase64, nonceBase64 };
       }
+
       //   async function encryptData(plainText) {
       //     debugger;
       //     // Convert plain text to bytes
